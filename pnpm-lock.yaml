@@ -20,6 +20,9 @@ dependencies:
   '@vercel/node':
     specifier: ^2.10.3
     version: 2.10.3
+  invariant:
+    specifier: ^2.2.4
+    version: 2.2.4
   isbot:
     specifier: ^3.6.8
     version: 3.6.8
@@ -4890,6 +4893,12 @@ packages:
       has: 1.0.3
       side-channel: 1.0.4
     dev: true
+
+  /invariant@2.2.4:
+    resolution: {integrity: sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==}
+    dependencies:
+      loose-envify: 1.4.0
+    dev: false
 
   /ip@1.1.8:
     resolution: {integrity: sha512-PuExPYUiu6qMBQb4l06ecm6T6ujzhmh+MeJcW9wa89PoAz5pvd4zPgN5WJV104mb6S2T1AwNIAaB70JNrLQWhg==}

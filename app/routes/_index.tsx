@@ -1,41 +1,54 @@
-import type { V2_MetaFunction } from "@remix-run/node";
+import { ActionArgs, LoaderArgs, V2_MetaFunction, json } from "@remix-run/node";
+import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import { Octokit } from "octokit";
 
 export const meta: V2_MetaFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { title: "Remix Github Search" },
+    { name: "description", content: "Remix Github Search" },
   ];
 };
 
+export async function action({ request }: ActionArgs) {
+  const form = await request.formData();
+  const search = form.get("search");
+
+  const errors = {
+    search: search ? null : "search is required",
+  };
+
+  const octokit = new Octokit({});
+
+  const data = await octokit.request("GET /search/users", {
+    q: search as string,
+    per_page: 5,
+  });
+
+  return json(data);
+}
+
 export default function Index() {
+  const data = useActionData<typeof action>();
+
   return (
-    <div style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.8" }}>
-      <h1>Welcome to Remix</h1>
-      <ul>
-        <li className="text-3xl font-bold underline">
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/blog"
-            rel="noreferrer"
-          >
-            15m Quickstart Blog Tutorial
-          </a>
-        </li>
-        <li>
-          <a
-            target="_blank"
-            href="https://remix.run/tutorials/jokes"
-            rel="noreferrer"
-          >
-            Deep Dive Jokes App Tutorial
-          </a>
-        </li>
-        <li>
-          <a target="_blank" href="https://remix.run/docs" rel="noreferrer">
-            Remix Docs
-          </a>
-        </li>
-      </ul>
+    <div className="w-full flex flex-col justify-center items-center p-6 gap-3">
+      <h1 className="text-xl">Remix Github Search</h1>
+      <Form method="post">
+        <input
+          className="w-20 border-2 border-black rounded-md p-1"
+          type="text"
+          name="search"
+        />
+        <button
+          className="w-20 border-2 border-black rounded-md p-1"
+          type="submit"
+        >
+          Search
+        </button>
+      </Form>
+      {data
+        ? data.data.items.map((item) => <p key={item.id}>{item.login}</p>)
+        : "data is empty"}
     </div>
   );
 }
