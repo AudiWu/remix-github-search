@@ -1,6 +1,8 @@
-import { ActionArgs, LoaderArgs, V2_MetaFunction, json } from "@remix-run/node";
-import { Form, useActionData, useLoaderData } from "@remix-run/react";
+import { ActionArgs, V2_MetaFunction, json } from "@remix-run/node";
+import { Form, useActionData } from "@remix-run/react";
 import { Octokit } from "octokit";
+import { Suspense } from "react";
+import Repositories from "~/components/Repositories";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -47,7 +49,15 @@ export default function Index() {
         </button>
       </Form>
       {data
-        ? data.data.items.map((item) => <p key={item.id}>{item.login}</p>)
+        ? data.data.items.map((item) => (
+            <div key={item.id}>
+              {item.login}
+              <Suspense fallback={<p>...loading</p>}>
+                {/* @ts-expect-error Server Component */}
+                <Repositories username={item.login} />
+              </Suspense>
+            </div>
+          ))
         : "data is empty"}
     </div>
   );
