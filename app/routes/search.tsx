@@ -1,10 +1,13 @@
 import { LoaderArgs, json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { Octokit } from "octokit";
+import Pagination from "~/components/Pagination";
 
 export async function loader({ request }: LoaderArgs) {
   const url = new URL(request.url);
   const usernameParams = url.searchParams.get("username");
+  const pageParams = url.searchParams.get("page") ?? 1;
+  const perPageParams = url.searchParams.get("perPage") ?? 10;
 
   if (!usernameParams) {
     throw json("No search term provided", { status: 400 });
@@ -14,22 +17,38 @@ export async function loader({ request }: LoaderArgs) {
 
   const data = await octokit.request("GET /search/users", {
     q: usernameParams,
-    per_page: 5,
+    per_page: Number(perPageParams),
   });
 
-  return json({ result: data, status: 200 });
+  return json({
+    result: data,
+    status: 200,
+    searchTerm: usernameParams,
+    page: Number(pageParams),
+    perPage: Number(perPageParams),
+  });
 }
 
 export default function Search() {
   const data = useLoaderData<typeof loader>();
+  const totalNumberOfPages = Math.ceil(data.result.data.total_count / 10);
+
   return (
     <>
       <h1>{data.status}</h1>
+
       <div>
         {data.result.data.items.map(({ login }) => (
           <p>{login}</p>
         ))}
       </div>
+
+      <Pagination
+        page={data.page}
+        perPage={data.perPage}
+        totalNumberOfPages={totalNumberOfPages}
+        searchTerm={data.searchTerm}
+      />
     </>
   );
 }
