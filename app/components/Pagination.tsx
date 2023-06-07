@@ -27,7 +27,7 @@ export default function Pagination({
             <Link
               role={"button"}
               className="py-1 px-6 border-2 border-black rounded-md shadow-md block text-2xl font-semibold space-x-2 align-middle"
-              to={pageRouteHandler(page - 1)}
+              to={pageRouteHandler(page - 1, perPage)}
             >
               <span className="inline-block">Previous</span>
             </Link>
@@ -36,7 +36,7 @@ export default function Pagination({
             <Link
               role={"button"}
               className="py-1 px-6 border-2 border-black rounded-md shadow-md block text-2xl font-semibold space-x-2 align-middle"
-              to={pageRouteHandler(page + 1)}
+              to={pageRouteHandler(page + 1, perPage)}
             >
               <span className="inline-block">Next</span>
             </Link>
