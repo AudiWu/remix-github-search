@@ -36,8 +36,11 @@ export default function Search() {
   const totalNumberOfPages = Math.ceil(data.result.data.total_count / 10);
 
   return (
-    <div>
-      <SearchForm searchTerm={data.searchTerm} />
+    <div className="p-10">
+      <div className="pb-10">
+        <SearchForm searchTerm={data.searchTerm} />
+      </div>
+
       <div>
         {data.result.data.items.map(({ login }) => (
           <p>{login}</p>
