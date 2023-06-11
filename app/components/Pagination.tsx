@@ -14,9 +14,9 @@ type PaginationProps = {
 };
 
 const PaginationButton = ({ text, to, disabled }: PaginationButtonProps) => {
-  const className = `py-1 px-6 border-2 rounded-md shadow-md block text-2xl font-semibold space-x-2 align-middle ${
+  const className = `${
     disabled ? "border-red-500 text-red-500" : "border-black"
-  }`;
+  } py-1 px-6 border-2 rounded-md shadow-md block text-2xl font-semibold space-x-2 align-middle`;
 
   return (
     <Link
@@ -48,12 +48,12 @@ export default function Pagination({
         <div className="flex flex-row space-x-2">
           <PaginationButton
             text="Previous"
-            disabled={page > 1}
+            disabled={page <= 0}
             to={pageRouteHandler(page - 1, perPage)}
           />
           <PaginationButton
             text="Next"
-            disabled={page < totalNumberOfPages}
+            disabled={page >= totalNumberOfPages}
             to={pageRouteHandler(page + 1, perPage)}
           />
         </div>
