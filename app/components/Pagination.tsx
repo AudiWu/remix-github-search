@@ -40,24 +40,22 @@ export default function Pagination({
     `/search?username=${searchTerm}&page=${pagination}&perPage=${perPagination}`;
 
   return (
-    <>
-      <div className="flex flex-col md:flex-row py-4 text-2xl space-x-2">
-        <div className="flex flex-row justify-center">
-          Showing pages {page} of {totalNumberOfPages}
-        </div>
-        <div className="flex flex-row space-x-2">
-          <PaginationButton
-            text="Previous"
-            disabled={page <= 0}
-            to={pageRouteHandler(page - 1, perPage)}
-          />
-          <PaginationButton
-            text="Next"
-            disabled={page >= totalNumberOfPages}
-            to={pageRouteHandler(page + 1, perPage)}
-          />
-        </div>
+    <div className="flex flex-col md:flex-row py-4 text-2xl space-x-2">
+      <div className="flex flex-row justify-center mb-2">
+        Showing pages {page} of {totalNumberOfPages}
       </div>
-    </>
+      <div className=" flex flex-row justify-center align-items-center gap-2">
+        <PaginationButton
+          text="Prev"
+          disabled={page <= 0}
+          to={pageRouteHandler(page - 1, perPage)}
+        />
+        <PaginationButton
+          text="Next"
+          disabled={page >= totalNumberOfPages}
+          to={pageRouteHandler(page + 1, perPage)}
+        />
+      </div>
+    </div>
   );
 }
