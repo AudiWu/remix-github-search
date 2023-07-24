@@ -1,6 +1,8 @@
-import { LoaderArgs, json } from "@remix-run/node";
+import type { LoaderArgs } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { Octokit } from "octokit";
+import { Card } from "~/components/Card";
 import Pagination from "~/components/Pagination";
 import SearchForm from "~/components/SearchForm";
 
@@ -41,10 +43,18 @@ export default function Search() {
         <SearchForm searchTerm={data.searchTerm} />
       </div>
 
-      <div>
-        {data.result.data.items.map(({ login }) => (
-          <p>{login}</p>
-        ))}
+      <div className="flex flex-col gap-2">
+        {data.result.data.items.map(
+          ({ login, id, avatar_url, html_url, repos_url }) => (
+            <Card
+              key={id}
+              login={login}
+              avatar_url={avatar_url}
+              html_url={html_url}
+              repos_url={repos_url}
+            />
+          )
+        )}
       </div>
 
       <Pagination
