@@ -16,7 +16,7 @@ export async function loader({ request }: LoaderArgs) {
     throw json("No search term provided", { status: 400 });
   }
 
-  const octokit = new Octokit({});
+  const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
 
   const data = await octokit.request("GET /search/users", {
     q: usernameParams,
@@ -37,32 +37,35 @@ export default function Search() {
   const data = useLoaderData<typeof loader>();
   const totalNumberOfPages = Math.ceil(data.result.data.total_count / 10);
 
+  console.log(data);
+
   return (
-    <div className="p-10">
-      <div className="pb-10">
-        <SearchForm searchTerm={data.searchTerm} />
-      </div>
+    <div className="p-10 w-full flex flex-col items-center">
+      <div className="w-1/2">
+        <div className="pb-10">
+          <SearchForm searchTerm={data.searchTerm} />
+        </div>
 
-      <div className="flex flex-col gap-2">
-        {data.result.data.items.map(
-          ({ login, id, avatar_url, html_url, repos_url }) => (
-            <Card
-              key={id}
-              login={login}
-              avatar_url={avatar_url}
-              html_url={html_url}
-              repos_url={repos_url}
-            />
-          )
-        )}
-      </div>
+        <div className="flex flex-col gap-2">
+          {data.result.data.items.map(
+            ({ login, id, avatar_url, html_url }) => (
+              <Card
+                key={id}
+                login={login}
+                avatar_url={avatar_url}
+                html_url={html_url}
+              />
+            )
+          )}
+        </div>
 
-      <Pagination
-        page={data.page}
-        perPage={data.perPage}
-        totalNumberOfPages={totalNumberOfPages}
-        searchTerm={data.searchTerm}
-      />
+        <Pagination
+          page={data.page}
+          perPage={data.perPage}
+          totalNumberOfPages={totalNumberOfPages}
+          searchTerm={data.searchTerm}
+        />
+      </div>
     </div>
   );
 }
